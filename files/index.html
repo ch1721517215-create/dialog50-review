@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>영어회화 50 · 누적복습</title>
+<meta name="theme-color" content="#1F4E42">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+  :root{
+    --bg: #EEF2ED;
+    --surface: #FFFFFF;
+    --surface-2: #F5F7F3;
+    --ink: #16262A;
+    --ink-muted: #5C6C67;
+    --ink-faint: #93A19B;
+    --pine: #2F6F5E;
+    --pine-dark: #1F4E42;
+    --pine-10: rgba(47,111,94,0.10);
+    --pine-20: rgba(47,111,94,0.20);
+    --pine-35: rgba(47,111,94,0.35);
+    --pine-55: rgba(47,111,94,0.55);
+    --pine-80: rgba(47,111,94,0.80);
+    --amber: #E2963A;
+    --amber-dark: #B9741F;
+    --line: rgba(22,38,42,0.10);
+    --shadow: 0 1px 2px rgba(22,38,42,0.06), 0 8px 24px rgba(22,38,42,0.06);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --font-display: 'Fraunces', 'Noto Serif KR', serif;
+    --font-body: 'PretendardVariable', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 20% -10%, var(--pine-10), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  #app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+
+  /* ---------- Header ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 20px 10px;
+  }
+  .brand{display:flex; flex-direction:column; gap:2px;}
+  .brand .kicker{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:11px;
+    letter-spacing:.16em;
+    color:var(--amber-dark);
+    text-transform:uppercase;
+  }
+  .brand .word{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:19px;
+    color:var(--ink);
+    letter-spacing:.01em;
+  }
+  .icon-btn{
+    width:38px;height:38px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--surface);
+    border:1px solid var(--line);
+    color:var(--pine-dark);
+    cursor:pointer;
+    box-shadow:var(--shadow);
+  }
+  .icon-btn svg{width:18px;height:18px;}
+  .back-btn{
+    display:flex; align-items:center; gap:6px;
+    font-size:13.5px; font-weight:600; color:var(--pine-dark);
+    cursor:pointer;
+  }
+  .back-btn svg{width:16px;height:16px;}
+
+  main{flex:1; padding:6px 20px 40px;}
+  .view{display:none;}
+  .view.active{display:block; animation:fadeUp .35s ease;}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ---------- Home ---------- */
+  .hero-card{
+    background:linear-gradient(165deg, var(--pine-dark) 0%, var(--pine) 100%);
+    border-radius: 22px;
+    padding:26px 24px 22px;
+    color:#F3F7F4;
+    box-shadow: 0 14px 30px rgba(31,78,66,0.28);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-card::after{
+    content:"";
+    position:absolute; right:-40px; top:-40px;
+    width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%);
+  }
+  .hero-top{display:flex; justify-content:space-between; align-items:baseline;}
+  .hero-day{font-family:var(--font-display); font-size:13px; letter-spacing:.14em; text-transform:uppercase; opacity:.85;}
+  .hero-streak{font-size:12px; opacity:.85; background:rgba(255,255,255,0.14); padding:4px 10px; border-radius:999px;}
+  .hero-num{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:56px;
+    line-height:1;
+    margin:14px 0 2px;
+    letter-spacing:-0.01em;
+  }
+  .hero-num small{font-size:22px; font-weight:500; opacity:.75;}
+  .hero-label{font-size:14px; opacity:.9; margin-bottom:18px;}
+  .hero-bar{height:6px; border-radius:999px; background:rgba(255,255,255,0.18); overflow:hidden; margin-bottom:20px;}
+  .hero-bar-fill{height:100%; background:linear-gradient(90deg, var(--amber), #F2C069); border-radius:999px; transition:width .5s ease;}
+  .cta-btn{
+    width:100%;
+    border:none;
+    background:#F3F7F4;
+    color:var(--pine-dark);
+    font-family:var(--font-body);
+    font-weight:700;
+    font-size:16px;
+    padding:15px 18px;
+    border-radius:14px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+  .cta-btn:active{transform:scale(0.98);}
+  .cta-sub{
+    text-align:center; font-size:12px; color:rgba(255,255,255,0.75); margin-top:10px;
+  }
+
+  .section-label{
+    font-family:var(--font-display);
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:.06em;
+    color:var(--ink-muted);
+    margin:28px 2px 12px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .section-label .link{
+    font-family:var(--font-body); font-weight:600; font-size:12.5px; color:var(--pine); cursor:pointer;
+  }
+
+  /* sediment / accumulation grid */
+  .strata{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+    box-shadow:var(--shadow);
+  }
+  .strata-grid{
+    display:grid;
+    grid-template-columns:repeat(10, 1fr);
+    gap:5px;
+  }
+  .cell{
+    aspect-ratio:1/1;
+    border-radius:5px;
+    border:1px solid var(--pine-20);
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:9px; font-weight:600; color:var(--pine-dark);
+  }
+  .cell.locked{
+    border-style:dashed;
+    border-color:var(--ink-faint);
+    color:transparent;
+    background:transparent;
+  }
+  .cell.new-today{
+    outline:2px solid var(--amber);
+    outline-offset:1px;
+  }
+  .strata-legend{
+    display:flex; align-items:center; gap:10px; margin-top:14px; font-size:11px; color:var(--ink-muted); flex-wrap:wrap;
+  }
+  .legend-swatch{width:11px;height:11px;border-radius:3px; display:inline-block; margin-right:4px; vertical-align:-1px;}
+
+  .stat-row{display:flex; gap:10px; margin-top:14px;}
+  .stat-box{flex:1; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-sm); padding:12px 14px; box-shadow:var(--shadow);}
+  .stat-box .num{font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--pine-dark);}
+  .stat-box .lbl{font-size:11.5px; color:var(--ink-muted); margin-top:2px;}
+
+  /* ---------- Calendar ---------- */
+  .calendar-card{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+    box-shadow:var(--shadow);
+  }
+  .cal-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+  .cal-month{font-family:var(--font-display); font-weight:700; font-size:14.5px; color:var(--ink);}
+  .cal-nav{
+    background:var(--surface-2); border:none; width:30px; height:30px; border-radius:9px;
+    cursor:pointer; font-size:16px; color:var(--pine-dark); display:flex; align-items:center; justify-content:center;
+  }
+  .cal-nav:active{background:var(--pine-10);}
+  .cal-weekdays{
+    display:grid; grid-template-columns:repeat(7,1fr);
+    font-size:10.5px; color:var(--ink-faint); text-align:center; margin-bottom:7px; font-weight:600;
+  }
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+  .cal-day{
+    aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+    border-radius:9px; font-size:12px; color:var(--ink-muted);
+  }
+  .cal-day.empty{visibility:hidden;}
+  .cal-day.studied{background:var(--pine); color:#fff; font-weight:700;}
+  .cal-day.today{box-shadow:0 0 0 2px var(--amber) inset;}
+  .cal-day.future{color:var(--ink-faint); opacity:.45;}
+  .cal-legend{display:flex; gap:14px; margin-top:13px; font-size:11px; color:var(--ink-muted);}
+
+  /* ---------- Today accordion ---------- */
+  .today-head{margin-bottom:14px;}
+  .today-title{font-family:var(--font-display); font-size:20px; font-weight:700;}
+  .today-sub{font-size:13px; color:var(--ink-muted); margin-top:4px;}
+
+  .acc-item{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:14px;
+    margin-bottom:10px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .acc-item.opened{border-color:var(--pine-35);}
+  .acc-head{
+    display:flex; align-items:center; gap:11px;
+    padding:14px 14px;
+    cursor:pointer;
+  }
+  .acc-num{
+    font-family:var(--font-display); font-weight:700; font-size:12px;
+    color:var(--pine); background:var(--pine-10); width:28px;height:28px;border-radius:8px;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .acc-item.opened .acc-num{background:var(--pine); color:#fff;}
+  .acc-main{flex:1; min-width:0;}
+  .acc-main .kr{font-weight:700; font-size:14.5px;}
+  .acc-main .en{font-size:12px; color:var(--ink-faint); font-style:italic; font-family:var(--font-display);}
+  .acc-badge{
+    font-size:10.5px; font-weight:700; letter-spacing:.03em;
+    padding:4px 9px; border-radius:999px; white-space:nowrap; flex-shrink:0;
+  }
+  .acc-badge.review{background:var(--pine-10); color:var(--pine-dark);}
+  .acc-badge.fresh{background:#FCEBD3; color:var(--amber-dark);}
+  .acc-chevron{
+    width:18px;height:18px; flex-shrink:0; color:var(--ink-faint);
+    transition:transform .25s ease;
+  }
+  .acc-item.expanded .acc-chevron{transform:rotate(180deg);}
+
+  .acc-body{
+    display:none;
+    padding:0 16px 16px 16px;
+    border-top:1px dashed var(--line);
+    margin-top:2px;
+    padding-top:14px;
+  }
+  .acc-item.expanded .acc-body{display:block;}
+  .dline{padding-left:14px; border-left:3px solid var(--pine-20); margin-bottom:11px;}
+  .dline:last-of-type{margin-bottom:14px;}
+  .dline .en{font-size:14.5px; font-weight:600; line-height:1.45;}
+  .dline .kr{font-size:13px; color:var(--ink-muted); margin-top:2px;}
+  .note-box{
+    background:var(--surface-2);
+    border-radius:12px;
+    padding:12px 13px;
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--ink-muted);
+  }
+  .note-box b{color:var(--pine-dark);}
+
+  .today-footer{
+    position:sticky;
+    bottom:0;
+    background:linear-gradient(180deg, rgba(238,242,237,0) 0%, var(--bg) 30%);
+    padding:16px 0 max(16px, env(safe-area-inset-bottom));
+    margin-top:6px;
+  }
+  .finish-btn{
+    width:100%;
+    border:none;
+    background:var(--pine);
+    color:#fff;
+    font-weight:700;
+    font-size:15.5px;
+    padding:16px;
+    border-radius:14px;
+    cursor:pointer;
+    box-shadow:0 10px 24px rgba(47,111,94,0.28);
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+  }
+  .finish-btn .sub{font-size:11.5px; font-weight:500; opacity:.85;}
+  .finish-btn:active{transform:scale(0.99);}
+
+  /* ---------- Complete ---------- */
+  .complete-wrap{text-align:center; padding-top:30px;}
+  .complete-badge{
+    width:84px;height:84px;border-radius:50%;
+    background:linear-gradient(165deg, var(--amber), #F2C069);
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 18px;
+    box-shadow:0 10px 24px rgba(226,150,58,0.35);
+  }
+  .complete-badge svg{width:38px;height:38px; color:#fff;}
+  .complete-title{font-family:var(--font-display); font-size:23px; font-weight:700;}
+  .complete-sub{font-size:14px; color:var(--ink-muted); margin-top:8px; line-height:1.6; padding:0 10px;}
+
+  /* ---------- List ---------- */
+  .list-search{
+    width:100%; padding:13px 14px; border-radius:12px; border:1px solid var(--line);
+    font-size:14px; margin-bottom:16px; font-family:var(--font-body); background:var(--surface);
+  }
+  .list-item-count{font-size:11px; color:var(--ink-faint); white-space:nowrap;}
+
+  .empty-note{font-size:13px; color:var(--ink-faint); text-align:center; padding:30px 10px;}
+
+  ::-webkit-scrollbar{width:0;height:0;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="topbar" id="topbar-home">
+    <div class="brand">
+      <div class="kicker">Snowball Review</div>
+      <div class="word">영어회화 50 · 누적복습</div>
+    </div>
+    <div class="icon-btn" id="btn-open-list" title="전체 목록">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+    </div>
+  </div>
+  <div class="topbar" id="topbar-sub" style="display:none;">
+    <div class="back-btn" id="btn-back-any">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      홈으로
+    </div>
+  </div>
+
+  <main>
+
+    <!-- HOME -->
+    <section class="view active" id="view-home">
+      <div class="hero-card">
+        <div class="hero-top">
+          <div class="hero-day" id="hero-day">DAY 1</div>
+          <div class="hero-streak" id="hero-streak">🔥 0일 연속</div>
+        </div>
+        <div class="hero-num" id="hero-num">0<small>/50</small></div>
+        <div class="hero-label" id="hero-label">학습한 표현</div>
+        <div class="hero-bar"><div class="hero-bar-fill" id="hero-bar-fill" style="width:0%"></div></div>
+        <button class="cta-btn" id="btn-start-session">
+          <span id="cta-label">오늘의 학습 시작</span>
+        </button>
+        <div class="cta-sub" id="cta-sub">새 표현 1개 + 지금까지 배운 표현 전체 복습</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box"><div class="num" id="stat-total-reviews">0</div><div class="lbl">누적 복습 횟수</div></div>
+        <div class="stat-box"><div class="num" id="stat-days">0</div><div class="lbl">학습한 날</div></div>
+        <div class="stat-box"><div class="num" id="stat-remaining">50</div><div class="lbl">남은 표현</div></div>
+      </div>
+
+      <div class="section-label">
+        <span>복습 축적 지도</span>
+        <span class="link" id="btn-open-list-2">전체 보기 →</span>
+      </div>
+      <div class="strata">
+        <div class="strata-grid" id="strata-grid"></div>
+        <div class="strata-legend">
+          <span><span class="legend-swatch" style="background:transparent;border:1px dashed var(--ink-faint)"></span>미학습</span>
+          <span><span class="legend-swatch" style="background:var(--pine-20)"></span>1~2회</span>
+          <span><span class="legend-swatch" style="background:var(--pine-55)"></span>3~5회</span>
+          <span><span class="legend-swatch" style="background:var(--pine-80)"></span>6회+</span>
+        </div>
+      </div>
+
+      <div class="section-label"><span>학습 달력</span></div>
+      <div class="calendar-card">
+        <div class="cal-header">
+          <button class="cal-nav" id="cal-prev">‹</button>
+          <div class="cal-month" id="cal-month-label">2026년 7월</div>
+          <button class="cal-nav" id="cal-next">›</button>
+        </div>
+        <div class="cal-weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="cal-legend">
+          <span><span class="legend-swatch" style="background:var(--pine)"></span>학습한 날</span>
+          <span><span class="legend-swatch" style="background:transparent;box-shadow:0 0 0 2px var(--amber) inset;"></span>오늘</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TODAY ACCORDION -->
+    <section class="view" id="view-today">
+      <div class="today-head">
+        <div class="today-title" id="today-title">오늘의 학습 · Day 1</div>
+        <div class="today-sub" id="today-sub">항목을 눌러 대화와 설명을 확인하세요.</div>
+      </div>
+      <div id="today-list"></div>
+      <div class="today-footer">
+        <button class="finish-btn" id="btn-finish-today">
+          <span id="finish-label">오늘 학습 완료</span>
+          <span class="sub" id="finish-sub">0 / 0 확인함</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- COMPLETE -->
+    <section class="view" id="view-complete">
+      <div class="complete-wrap">
+        <div class="complete-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        </div>
+        <div class="complete-title" id="complete-title">Day 1 완료!</div>
+        <div class="complete-sub" id="complete-sub"></div>
+      </div>
+
+      <div class="section-label"><span>업데이트된 복습 지도</span><span></span></div>
+      <div class="strata">
+        <div class="strata-grid" id="strata-grid-2"></div>
+      </div>
+
+      <div style="margin-top:20px;">
+        <button class="cta-btn" id="btn-back-home" style="background:var(--pine); color:#fff;">홈으로</button>
+      </div>
+    </section>
+
+    <!-- LIST -->
+    <section class="view" id="view-list">
+      <input class="list-search" id="list-search" placeholder="영어 또는 한국어로 검색…">
+      <div id="list-container"></div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+const DIALOGS = [{"id": 1, "expr_en": "It suits you.", "expr_kr": "너한테 잘 어울려.", "lines": [{"en": "I like your new hairstyle.", "kr": "너 머리 예쁘다."}, {"en": "Thanks, I wanted a change.", "kr": "고마워, 스타일을 좀 바꾸고 싶었어."}, {"en": "It suits you.", "kr": "너한테 잘 어울려."}, {"en": "Where did you get it done?", "kr": "어디서 했어?"}, {"en": "At a salon downtown.", "kr": "다운타운에 있는 미용실에서."}], "note": "'Suit'는 명사로는 '수트, 정장'을 의미하지만, 동사로는 '어울리다'라는 뜻을 가집니다. 여기서는 동사로 사용되어 무언가가 상대방에게 잘 어울린다고 말하는 칭찬의 표현입니다."}, {"id": 2, "expr_en": "Help yourself.", "expr_kr": "마음껏 먹어(써).", "lines": [{"en": "Did you bake cookies?", "kr": "쿠키를 구웠니?"}, {"en": "Yes. Help yourself.", "kr": "응, 마음껏 먹어."}, {"en": "There are plenty.", "kr": "많이 있어."}, {"en": "Thanks. I'll grab a couple.", "kr": "고마워, 두어 개 먹어볼게."}], "note": "직역하면 '너 자신을 도와라'라는 뜻인데, 스스로 필요한 것을 자유롭게 이용하라는 의미로 사용됩니다. 음식이나 물건을 권하며 '마음껏 먹어/사용 해'라고 말할 때 씁니다."}, {"id": 3, "expr_en": "Get well soon.", "expr_kr": "빨리 나아(조속한 회복을 기원해).", "lines": [{"en": "What's wrong?", "kr": "무슨 일이니?"}, {"en": "I have a headache.", "kr": "머리가 아파."}, {"en": "Do you need medicine?", "kr": "약 필요해?"}, {"en": "Yes, please.", "kr": "응, 좀 줘."}, {"en": "Here you go. Get well soon.", "kr": "여기 있어. 빨리 나아."}], "note": "'Well'은 '나아지다, 좋아지다, 회복하다'라는 뜻으로, 이 표현은 조속한 회복을 기원한다는 의미로 사용됩니다. 아픈 친구에게 위로의 뜻을 전달할 때 사용해 보세요."}, {"id": 4, "expr_en": "What brings you here?", "expr_kr": "여긴 어쩐 일이야?", "lines": [{"en": "What brings you here?", "kr": "여긴 어쩐 일이야?"}, {"en": "I have a meeting nearby.", "kr": "근처에 회의가 있어서."}, {"en": "How about you?", "kr": "너는?"}, {"en": "Just catching up with a friend.", "kr": "친구 만나려고."}, {"en": "Nice, enjoy your time.", "kr": "좋네, 좋은 시간 보내."}], "note": "직역하면 '무엇이 너를 여기로 데려왔니'라는 뜻으로, 예상치 못한 장소에서 누군가를 만났을 때 약간의 놀람을 담아 사용하는 표현입니다."}, {"id": 5, "expr_en": "I have other plans.", "expr_kr": "다른 약속이 있어.", "lines": [{"en": "Are you coming to the party?", "kr": "파티에 올 거야?"}, {"en": "I don't think so.", "kr": "안 갈 것 같아."}, {"en": "I have other plans.", "kr": "다른 약속이 있어."}, {"en": "That's all right. We'll catch up another time then.", "kr": "괜찮아, 우린 다음에 보자."}], "note": "'약속'을 뜻하는 단어로 appointment도 있지만, 이는 공식적인 예약을 지칭할 때 주로 사용되고, 친구들끼리의 약속이나 일정은 보통 plan을 사용해 표현합니다."}, {"id": 6, "expr_en": "Why are you up?", "expr_kr": "왜 안 자고 있어?", "lines": [{"en": "Why are you up?", "kr": "왜 안 자고 있어?"}, {"en": "I'm finishing up some work.", "kr": "일 좀 마무리할 게 있어서."}, {"en": "It's due tomorrow.", "kr": "내일이 마감일이거든."}, {"en": "What about you?", "kr": "너는?"}, {"en": "I'm reading a book.", "kr": "책 좀 읽고 있어."}], "note": "'Up'은 '깨어 있다'는 의미로 쓰입니다. 상대방이 예상치 못하게 깨어 있는 상황에서 그 이유를 물을 때 사용합니다."}, {"id": 7, "expr_en": "I'll take it.", "expr_kr": "그걸로 할게요.", "lines": [{"en": "How much is this shirt?", "kr": "이 셔츠 얼마예요?"}, {"en": "It's 20 dollars.", "kr": "20달러입니다."}, {"en": "Do you have a smaller size?", "kr": "작은 사이즈 있나요?"}, {"en": "Yes, we do.", "kr": "네, 있습니다."}, {"en": "Great, I'll take it.", "kr": "좋아요, 그걸로 할게요."}], "note": "동사 'take'는 매우 다양한 의미로 쓰이는데, 여기서는 '가져가다, 취득하다, 사다'의 의미로 사용되어 쇼핑 중에 '이걸로 할게요/이거 살게요'라고 말할 때 사용합니다."}, {"id": 8, "expr_en": "Is it far?", "expr_kr": "멀어요?", "lines": [{"en": "Where is the nearest bank?", "kr": "가장 가까운 은행이 어디예요?"}, {"en": "It's two blocks down the street.", "kr": "두 블록 내려가시면 있어요."}, {"en": "Is it far?", "kr": "멀어요?"}, {"en": "No, it's very close.", "kr": "아니요, 아주 가까워요."}, {"en": "Thanks again.", "kr": "다시 한번 고마워요."}], "note": "'It'은 특정 대상을 지칭하지 않고 거리·시간·날씨·명암 등을 나타낼 때 사용하는 비인칭 대명사입니다. (거리) It's far, (날씨) It's sunny, (시간) It's 5, (명암) It's dark 등으로 쓰입니다."}, {"id": 9, "expr_en": "Thanks for the heads-up.", "expr_kr": "알려줘서 고마워.", "lines": [{"en": "How's the weather today?", "kr": "오늘 날씨 어때?"}, {"en": "It's pretty cold.", "kr": "꽤 추워."}, {"en": "Should I bring a jacket?", "kr": "자켓 가져가야 할까?"}, {"en": "Definitely.", "kr": "당연하지."}, {"en": "Thanks for the heads-up.", "kr": "알려줘서 고마워."}], "note": "동사 'head'는 '어디로 이끌다'라는 뜻으로, 'heads-up'은 중요한 정보나 경고를 사전에 제공하는 것을 의미합니다. 누군가 미리 주의를 주거나 알려준 것에 감사할 때 사용하는 표현입니다."}, {"id": 10, "expr_en": "I'm pretty introverted.", "expr_kr": "난 꽤 내성적이야.", "lines": [{"en": "How would you describe yourself?", "kr": "내 성격은 어떤 편이니?"}, {"en": "I'm pretty introverted.", "kr": "난 꽤 내성적이야."}, {"en": "Really? I'm more of an extrovert.", "kr": "그래? 나는 좀 외향적인 편인데."}, {"en": "That's interesting.", "kr": "흥미롭다."}], "note": "Introverted는 내향적 성향을, extroverted는 외향적 성향을 의미합니다. 두 단어 모두 성격을 묘사할 때 사용하며, an introvert / an extrovert 등 으로도 다양하게 표현할 수 있어요."}, {"id": 11, "expr_en": "Here you go.", "expr_kr": "여기 있습니다.", "lines": [{"en": "Ticket and passport, please.", "kr": "티켓과 여권 부탁합니다."}, {"en": "Here you go.", "kr": "여기 있습니다."}, {"en": "Great. Have a safe flight.", "kr": "좋아요, 안전한 비행 되세요."}, {"en": "Thanks.", "kr": "감사합니다."}, {"en": "You're welcome.", "kr": "천만해요."}], "note": "상대방에게 무언가를 건네거나 제공할 때 '여기 있습니다'라는 의미로 사용됩니다. 비슷한 표현으로 찾아 보여줄 때 쓰는 'Here it is'와, 건네주며 쓰는 'Here you are'도 있습니다."}, {"id": 12, "expr_en": "Let me check.", "expr_kr": "진찰해 볼게요(확인해 볼게요).", "lines": [{"en": "What seems to be the problem?", "kr": "어디가 불편하신가요?"}, {"en": "I have a sore throat.", "kr": "목이 아파요."}, {"en": "Let me check.", "kr": "진찰해 볼게요."}, {"en": "You should take some medicine.", "kr": "약을 드셔야겠죠."}], "note": "영어에서는 '내가 뭐뭐 하겠다'라는 표현을 할 때 'I will'이라고 직접 말하기보다, 상대방의 허락을 구한다는 의미로 'Let me'라는 표현을 자주 씁니다. 'Let me check'는 '내가 확인해 볼게'라는 의미입니다."}, {"id": 13, "expr_en": "Three nights. 3", "expr_kr": "박.", "lines": [{"en": "I'd like to book a room.", "kr": "방을 예약하고 싶어요."}, {"en": "For how many nights?", "kr": "얼마나 묵으시나요?"}, {"en": "Three nights.", "kr": "3박이요."}, {"en": "Your name, please.", "kr": "성함이 어떻게 되시나요?"}, {"en": "John Smith.", "kr": "존 스미스입니다."}], "note": "영어에서는 숙박 기간을 nights와 days로 나타냅니다. 3박 4일은 3 nights 4 days, 1박 2일은 one night 2 days로 표현합니다. 1박의 경우 'nights'가 아니라 단수형 'night'가 된다는 점도 알아두세요."}, {"id": 14, "expr_en": "How have you been?", "expr_kr": "어떻게 지냈어?", "lines": [{"en": "Hi, long time no see.", "kr": "안녕, 오랜만이야."}, {"en": "How have you been?", "kr": "어떻게 지냈어?"}, {"en": "I've been good. And you?", "kr": "잘 지냈어. 너는?"}, {"en": "Same here.", "kr": "나도 잘 지냈어."}], "note": "'How are you?'가 상대방의 현재 상태나 기분을 물어보는 말이라면, 'How have you been?'은 그것보다 긴 기간 동안 어떻게 지냈는지를 물어보는 질문입니다."}, {"id": 15, "expr_en": "Sounds fun.", "expr_kr": "재미있겠다.", "lines": [{"en": "Happy birthday!", "kr": "생일 축하해!"}, {"en": "Thank you.", "kr": "고마워."}, {"en": "Any plans for today?", "kr": "오늘 무슨 계획 있어?"}, {"en": "Just a small party with friends.", "kr": "친구들이랑 작은 파티 할 거야."}, {"en": "Sounds fun.", "kr": "재미있겠다."}], "note": "동사 'sound'가 '~처럼 들린다'는 의미로 사용되었어요. 상대방의 의견이나 제안이 재미있을 것 같다는 의사를 표현할 때 사용하며, 'sounds like fun'이라고도 말할 수 있어요."}, {"id": 16, "expr_en": "How about Paris?", "expr_kr": "파리 어때?", "lines": [{"en": "Where should we go for vacation?", "kr": "휴가 때 어디 갈까?"}, {"en": "How about Paris?", "kr": "파리 어때?"}, {"en": "That sounds amazing.", "kr": "멋질 것 같아."}, {"en": "When should we go?", "kr": "언제 갈까?"}, {"en": "How about next month?", "kr": "다음 달 어때?"}], "note": "'How about'은 제안 혹은 의견을 물을 때 사용되는 표현입니다. 뒤에는 명사가 나올 수도 있고, 동사원형에 -ing를 붙인 형태가 나오기도 합니다. (예: How about traveling to Paris?)"}, {"id": 17, "expr_en": "Oh, I didn't realize.", "expr_kr": "아, 몰랐어요.", "lines": [{"en": "You can't park here.", "kr": "여기 주차하면 안 돼요."}, {"en": "Oh, I didn't realize.", "kr": "아, 몰랐어요."}, {"en": "Where should I park?", "kr": "어디에 주차해야 하나요?"}, {"en": "There's a parking lot across the street.", "kr": "길 건너에 주차장이 있어요."}, {"en": "Thanks for letting me know.", "kr": "알려줘서 고마워요."}], "note": "동사 'realize'는 '깨닫다, 알아차리다'라는 뜻이 있는데, 여기서는 '알아차리지 못했다', 즉 '몰랐다'는 표현으로 자신이 무엇에 대해 인식하지 못했음을 사과하는 뉘앙스로 사용되었어요."}, {"id": 18, "expr_en": "Turn up the volume.", "expr_kr": "볼륨을 좀 높여줘.", "lines": [{"en": "Turn up the volume.", "kr": "볼륨을 좀 높여줘."}, {"en": "It's hard to hear.", "kr": "잘 안 들려."}, {"en": "Sure, no problem.", "kr": "물론, 알겠어."}, {"en": "How's this?", "kr": "이 정도 어때?"}, {"en": "Perfect, thank you.", "kr": "완벽해, 고마워."}], "note": "동사 'turn'은 매우 다양한 의미를 가지는데, 여기서는 '돌리다, 변화시키다'로 쓰였어요. up은 '올리다', down은 '내리다', on은 '전기 등을 켜다', off는 '전기 등을 끄다'라는 뜻이 있어요."}, {"id": 19, "expr_en": "Can I get a refund for this?", "expr_kr": "이걸 환불받을 수 있을까요?", "lines": [{"en": "Can I get a refund for this?", "kr": "이걸 환불받을 수 있을까요?"}, {"en": "Sure, do you have the receipt?", "kr": "네, 영수증 있나요?"}, {"en": "Yes, here it is.", "kr": "네, 여기 있어요."}, {"en": "Let me process that for you.", "kr": "처리해 드릴게요."}, {"en": "Thank you.", "kr": "감사합니다."}], "note": "직역하면 '내가 뭐뭐를 얻을 수 있을까요'라는 뜻으로, 상대방에게 요청이나 질문을 할 때 유용한 표현이에요. 환불받고 싶다면 'Can I get a refund for this?'라고 말해보세요."}, {"id": 20, "expr_en": "How was your day?", "expr_kr": "오늘 어땠어?", "lines": [{"en": "How was your day?", "kr": "오늘 어땠어?"}, {"en": "It was good, thanks.", "kr": "좋았어, 고마워."}, {"en": "How about yours?", "kr": "너는?"}, {"en": "Busy, but good.", "kr": "바빴지만 괜찮았어."}, {"en": "Glad to hear it.", "kr": "다행이다."}], "note": "'How was'를 이용해 상대방의 시간이나 경험이 어땠는지 물어볼 수 있어요. (How was your weekend? 주말 어땠어? / How was your trip? 여행 어땠어? / How was the movie? 영화 어땠어?)"}, {"id": 21, "expr_en": "Come on in.", "expr_kr": "들어와.", "lines": [{"en": "Congrats on your new house!", "kr": "새 집 축하해!"}, {"en": "Thank you.", "kr": "고마워."}, {"en": "Come on in.", "kr": "들어와."}, {"en": "When did you move in?", "kr": "언제 이사했어?"}, {"en": "Last week.", "kr": "지난주에."}], "note": "상대방에게 안으로 들어오도록 권유하는 표현입니다. 'Come on in'이라고 해도 되고 간단히 'Come in'이라고 해도 됩니다. 반대로 들어가도 될지 요 청할 때는 'Can I come in?'이라고 말하면 됩니다."}, {"id": 22, "expr_en": "I'll try it on.", "expr_kr": "신어(입어) 볼게요.", "lines": [{"en": "I'm looking for sneakers.", "kr": "운동화 찾고 있어요."}, {"en": "How about these ones?", "kr": "이거 어때요?"}, {"en": "They look nice. I'll try them on.", "kr": "좋아 보이네요, 신어 볼게요."}, {"en": "Sure, here's a pair in your size.", "kr": "네, 사이즈 맞는 거 드릴게요."}], "note": "'Try ~ on'은 옷이나 신발 등을 신어 보다, 입어 보다라는 뜻입니다. 쇼핑 중에 점원이 가져다 준 것을 시도해 보겠다고 말할 때 사용합니다."}, {"id": 23, "expr_en": "I have a pet dog.", "expr_kr": "난 개를 키워요.", "lines": [{"en": "I have a pet dog named Max.", "kr": "난 맥스라는 개를 키워요."}, {"en": "That's cute. I have a cat.", "kr": "귀엽네요, 저는 고양이를 키워요."}, {"en": "Her name is Luna.", "kr": "고양이 이름은 루나예요."}, {"en": "How old is she?", "kr": "몇 살인가요?"}, {"en": "Two years old.", "kr": "두 살이에요."}], "note": "우리말로는 '키우다'라고 하면 'raise'가 떠오르지만, raise는 보통 작물이나 자녀를 키울 때 쓰고, 애완동물을 키운다고 할 때는 소유의 개념을 넣어 'I have a dog'이라고 말하는 게 더 일반적입니다."}, {"id": 24, "expr_en": "She's in the hospital.", "expr_kr": "그녀는 입원했어(병원에 있어).", "lines": [{"en": "I heard Jenny is in the hospital.", "kr": "제니가 입원했대."}, {"en": "What? It can't be true.", "kr": "뭐라고? 그럴 리 없어."}, {"en": "I hope it's just a rumor.", "kr": "그냥 소문이기를."}, {"en": "I can't believe it. She seemed fine last week.", "kr": "믿을 수가 없어, 저번 주에는 괜찮아 보였는데."}], "note": "이 표현은 '그녀는 병원에 있습니다', 즉 '입원 중이다'라는 의미입니다. '입원하다'라는 뜻을 가진 be hospitalized 표현도 있지만, 간단히 'in the hospital'이라고 표현하기도 합니다."}, {"id": 25, "expr_en": "Have you seen this movie?", "expr_kr": "이 영화 봤어?", "lines": [{"en": "Have you seen this movie?", "kr": "이 영화 봤어?"}, {"en": "No, is it good?", "kr": "아니, 재미있어?"}, {"en": "Yes, it's fantastic.", "kr": "응, 환상적이야."}, {"en": "I should watch it. It's really worth it.", "kr": "봐야겠네, 정말 가치가 있어."}], "note": "'Did you see this movie last night?'는 어제 밤에 그 영화를 보았는지 특정 시간대를 직접적으로 묻는 질문인 반면, 'Have you seen this movie?'는 그 영화를 본 경험을 묻는, 즉 봤는지 안 봤는지에 집중한 질문입니다."}, {"id": 26, "expr_en": "It's a simple recipe.", "expr_kr": "간단한 레시피야.", "lines": [{"en": "This pasta is delicious.", "kr": "이 파스타 맛있다."}, {"en": "How did you make it?", "kr": "어떻게 만들었어?"}, {"en": "It's a simple recipe.", "kr": "간단한 레시피야."}, {"en": "Can I have the recipe?", "kr": "레시피 좀 줄래?"}, {"en": "Sure, I'll write it down for you.", "kr": "물론, 적어 줄게."}], "note": "'Simple'은 간단해서 만들기 쉽다는 의미예요. 'a simple recipe' 혹은 'easy to cook'이라고 바꿔서 표현할 수 있습니다."}, {"id": 27, "expr_en": "What would you like?", "expr_kr": "뭐로 드릴까요?", "lines": [{"en": "What would you like?", "kr": "뭐로 드릴까요?"}, {"en": "A cappuccino, please.", "kr": "카푸치노 주세요."}, {"en": "Hot or iced?", "kr": "뜨거운 거요, 아니면 차가운 거요?"}, {"en": "Hot, please.", "kr": "뜨거운 거요."}, {"en": "Here you go, enjoy.", "kr": "여기 있습니다, 맛있게 드세요."}], "note": "조동사 would는 '뭐뭐 하기를 바라다/원하다'는 의미로 사용됩니다. 상대방이 무엇을 원하는지 물어보는 표현으로, 식당에서 점원이 주문을 받으며 많 이 사용하는 표현입니다."}, {"id": 28, "expr_en": "I'll give it a shot.", "expr_kr": "해볼게.", "lines": [{"en": "My computer keeps freezing.", "kr": "컴퓨터가 계속 멈춰."}, {"en": "Try restarting it.", "kr": "재부팅해 봐."}, {"en": "Okay, I'll give it a shot.", "kr": "알겠어, 해볼게."}, {"en": "Let me know if it helps.", "kr": "도움이 되면 알려줘."}, {"en": "Will do, thanks.", "kr": "그럴게, 고마워."}], "note": "어떤 도전적인 일을 시도해 보겠다는 결심을 나타낼 때 사용됩니다. 'give it a try'라고 표현하기도 합니다."}, {"id": 29, "expr_en": "My car is out of gas.", "expr_kr": "차에 기름이 떨어졌어.", "lines": [{"en": "Want to go for a drive?", "kr": "드라이브 갈까?"}, {"en": "Sure, but my car is out of gas.", "kr": "좋아, 그런데 차에 기름이 떨어졌어."}, {"en": "Let's stop by the gas station first.", "kr": "주유소에 먼저 들르자."}, {"en": "Let's do that.", "kr": "그래, 그러자."}], "note": "'be out of'는 무언가가 다 떨어져서 없다, 부족하다는 의미로 사용됩니다. 맥락에 따라 'I'm out of ~'로 바꿀 수도 있습니다. (예: I'm out of milk. 우 유가 다 떨어졌어요.)"}, {"id": 30, "expr_en": "Grab a coffee?", "expr_kr": "커피 마실래?", "lines": [{"en": "Grab a coffee?", "kr": "커피 마실래?"}, {"en": "That sounds great.", "kr": "좋지."}, {"en": "What will you have?", "kr": "뭐 마실 거야?"}, {"en": "I'll have a latte.", "kr": "라떼 마실게."}, {"en": "Great choice.", "kr": "좋은 선택이야."}], "note": "'Grab'은 '다 가져오다'라는 의미이지만, 일상 대화에서는 간단히 음료나 음식을 빨리 먹거나 산다는 의미로 사용됩니다. 'Do you want to grab a coffee?'를 줄인 캐주얼한 제안 표현이에요."}, {"id": 31, "expr_en": "Three times a week.", "expr_kr": "일주일에 세 번.", "lines": [{"en": "Do you go to the gym?", "kr": "헬스장 다녀?"}, {"en": "Yes, three times a week.", "kr": "응, 주 3회 다녀."}, {"en": "That's impressive. It helps me stay fit.", "kr": "대단하다. 건강 유지하는 데 도움이 돼."}, {"en": "I should try that.", "kr": "나도 해봐야겠다."}], "note": "빈도를 말할 때 사용하는 표현이에요. 일주일에 한 번 once a week, 두 번 twice a week, 한 달에 네 번 4 times a month, 1년에 다섯 번 five times a year처럼 나타낼 수 있어요."}, {"id": 32, "expr_en": "I love painting.", "expr_kr": "그림 그리는 거 좋아해.", "lines": [{"en": "What do you do for fun?", "kr": "뭐 하는 게 재미있어?"}, {"en": "I love painting.", "kr": "그림 그리는 거 좋아해."}, {"en": "That's cool. It's very relaxing.", "kr": "멋지다. 아주 편안해져."}, {"en": "I'd love to see your work.", "kr": "너 작품 보고 싶다."}], "note": "동사 'like'는 일반적으로 좋아한다는 의미라면, 'love'는 강한 감정이나 애정을 나타내요. '너무너무 좋아한다'는 뜻을 내포하고 있습니다."}, {"id": 33, "expr_en": "I know, right?", "expr_kr": "그러니까(내 말이).", "lines": [{"en": "It's so hot today.", "kr": "오늘 진짜 덥다."}, {"en": "I know, right?", "kr": "그러니까."}, {"en": "Let's grab some iced drinks.", "kr": "시원한 거라도 마실까."}, {"en": "Perfect, there's a cafe around the corner.", "kr": "좋아, 코너에 카페가 하나 있어."}], "note": "직역하면 '나도 알고 있어, 그렇지'라는 뜻이며, 일상 대화에서는 '그러게 말이야, 내 말이'라는 의미로도 해석됩니다. 상대방의 의견에 동의하거나 공감 을 표현할 때 사용할 수 있습니다."}, {"id": 34, "expr_en": "Traffic was very heavy.", "expr_kr": "차가 엄청 막혔어.", "lines": [{"en": "I'm sorry I'm late.", "kr": "늦어서 미안해."}, {"en": "Traffic was very heavy.", "kr": "차가 엄청 막혔어."}, {"en": "It's okay. Thanks for waiting.", "kr": "괜찮아. 기다려줘서 고마워."}, {"en": "No problem at all.", "kr": "전혀 문제없어."}], "note": "'Heavy'는 길이나 교통 상황이 매우 밀집하고 많다는 것을 의미합니다. 다른 표현으로는 'there was a traffic jam'이라고도 할 수 있습니다."}, {"id": 35, "expr_en": "Sounds delicious.", "expr_kr": "맛있겠다.", "lines": [{"en": "What's for dinner tonight?", "kr": "오늘 저녁으로 뭐 할 거야?"}, {"en": "I'm making fried rice.", "kr": "볶음밥 만들 거야."}, {"en": "Sounds delicious. Want to join?", "kr": "맛있겠다. 같이 먹을래?"}, {"en": "I'd love to.", "kr": "좋지."}], "note": "동사 'sound'는 어떤 모습으로부터 느껴지는 느낌을 나타내기도 합니다. 'sounds delicious'라고 하면 음식이 맛있게 들린다, 즉 맛있겠다는 뜻이 됩 니다."}, {"id": 36, "expr_en": "That sounds nice.", "expr_kr": "그거 좋겠네.", "lines": [{"en": "Any plans for the weekend?", "kr": "주말 계획 있어?"}, {"en": "Just relaxing at home.", "kr": "그냥 집에서 쉴 거야."}, {"en": "That sounds nice. How about you?", "kr": "그거 좋겠네. 너는?"}, {"en": "I'm going hiking.", "kr": "하이킹 갈 거야."}], "note": "직역해 보면 '좋게 들린다'는 뜻으로, 상대방 의견에 대한 긍정적인 반응을 표현할 때 사용합니다. that sounds good / that sounds great / that sounds wonderful / that sounds fantastic 등으로 바꿀 수 있습니다."}, {"id": 37, "expr_en": "Totally recommend it.", "expr_kr": "완전 강추야.", "lines": [{"en": "I got a new coffee machine.", "kr": "나 새 커피 머신 샀어."}, {"en": "How is it?", "kr": "어때?"}, {"en": "It makes great coffee. I might get one too.", "kr": "커피 진짜 맛있게 나와. 나도 하나 살까 봐."}, {"en": "Totally recommend it.", "kr": "완전 강추야."}], "note": "'Totally'는 '전적으로, 완전히'라는 의미를 가지며, 'recommend'는 추천하다는 뜻의 동사입니다. 이 문장은 무언가를 완전히 추천한다는 의미로, 캐 주얼한 상황에서 '완전 추천'이라고 말할 때 사용할 수 있는 표현입니다."}, {"id": 38, "expr_en": "Sounds good to me.", "expr_kr": "좋아.", "lines": [{"en": "What movie should we watch?", "kr": "무슨 영화 볼까?"}, {"en": "How about a thriller?", "kr": "스릴러 어때?"}, {"en": "Sounds good to me. Let's pick one on Netflix.", "kr": "좋아, 넷플릭스에서 하나 고르자."}, {"en": "Perfect.", "kr": "완벽해."}], "note": "상대방의 제안이 나에게 좋은 선택인 것 같다는 의미를 가집니다. 앞서 학습한 'that sounds nice'와 마찬가지로 긍정적인 반응을 나타내며 두 표현은 비슷한 맥락에서 사용될 수 있습니다."}, {"id": 39, "expr_en": "I'm so proud of you.", "expr_kr": "내가 정말 자랑스럽다.", "lines": [{"en": "I got an A on my math test.", "kr": "수학 시험에서 A 받았어."}, {"en": "That's wonderful!", "kr": "대단한데!"}, {"en": "I'm so proud of you.", "kr": "내가 정말 자랑스럽다."}, {"en": "Keep up the good work.", "kr": "계속 열심히 하렴."}, {"en": "I will.", "kr": "그럴게요."}], "note": "'be proud of'는 자랑스러워하다의 의미로, 누군가의 성과에 대해 자부심을 느낄 때 사용합니다. (I'm proud of my brother. She is proud of her kids. 등으로 응용)"}, {"id": 40, "expr_en": "It's really painful.", "expr_kr": "너무 아파.", "lines": [{"en": "Are you okay?", "kr": "너 괜찮니?"}, {"en": "I have a cavity. It's really painful.", "kr": "충치가 하나 생겼어, 너무 아파."}, {"en": "That's too bad.", "kr": "안 됐다."}, {"en": "I should get it checked.", "kr": "검사를 받아 봐야겠어."}], "note": "'Painful'은 '아픈, 괴로운, 고통스러운'이라는 뜻으로, 무언가가 통증을 주거나 불편한 상태일 때 사용되는 표현입니다."}, {"id": 41, "expr_en": "You're a natural.", "expr_kr": "너 진짜 타고났구나.", "lines": [{"en": "You're a good cook.", "kr": "요리 잘한다."}, {"en": "Thanks, I enjoy cooking.", "kr": "고마워, 난 요리하는 거 즐겨."}, {"en": "Your cooking is delicious. I enjoy trying new recipes.", "kr": "너의 요리는 정말 맛있어. 새로운 레시피 시도하는 게 좋아."}, {"en": "You're a natural.", "kr": "너 진짜 타고났구나."}], "note": "직역하면 '너는 자연적이다'라는 의미입니다. 어떤 사람이 특정 기술이나 능력을 자연스럽게 잘 수행한다, 즉 너무 자연스러워서 타고난 것처럼 느껴진 다는 속뜻을 내포하고 있습니다."}, {"id": 42, "expr_en": "These things happen.", "expr_kr": "그럴 수도 있지.", "lines": [{"en": "I spilled coffee on your pants.", "kr": "내 바지에 커피를 쏟았어."}, {"en": "These things happen. It's really okay.", "kr": "그럴 수도 있지, 정말 괜찮아."}, {"en": "Don't worry about it.", "kr": "걱정하지 마."}, {"en": "Thank you for understanding.", "kr": "이해해 줘서 고마워."}], "note": "직역하면 '이런 일도 있지'라는 의미입니다. 예상치 못한 상황이나 불행한 사건이 일어났을 때 '괜찮아, 이런 일이 종종 일어나'라는 뉘앙스로 사용됩니 다."}, {"id": 43, "expr_en": "I'm a fan of the Bulls.", "expr_kr": "난 불스 팬이야.", "lines": [{"en": "Which team do you support?", "kr": "어느 팀 응원해?"}, {"en": "I support the Lakers. What about you?", "kr": "레이커스 응원해. 너는 어때?"}, {"en": "I'm a fan of the Bulls.", "kr": "난 불스 팬이야."}, {"en": "Nice, let's watch together sometime.", "kr": "좋네, 나중에 같이 경기 보자."}], "note": "'a fan of'는 모모의 팬이라는 뜻으로, 특정 인물·그룹·팀 등을 좋아하거나 지지하는 사람을 의미합니다. 내가 좋아하는 것, 열광하는 것에 대한 애정을 나타낼 때 사용해요."}, {"id": 44, "expr_en": "Our team won 3-1.", "expr_kr": "우리 팀이 3대 1로 이겼어.", "lines": [{"en": "Did you watch the soccer game last night?", "kr": "어젯밤 축구 경기 봤어?"}, {"en": "Yes, it was exciting.", "kr": "응, 진짜 흥미진진했어."}, {"en": "Our team won 3-1.", "kr": "우리 팀이 3대 1로 이겼어."}, {"en": "That's great.", "kr": "대단해."}], "note": "스포츠 경기 점수를 말할 때는 이렇게 숫자 그대로 읽어요. (5-2 five to two, 6-3 six to three) 무승부는 tie라고 하면 됩니다."}, {"id": 45, "expr_en": "Sounds tasty.", "expr_kr": "맛있겠다.", "lines": [{"en": "What are we cooking today?", "kr": "오늘 뭐 요리할 거야?"}, {"en": "Pasta with tomato sauce.", "kr": "토마토 소스 파스타."}, {"en": "Sounds tasty. Can you boil the water?", "kr": "맛있겠다. 물 좀 끓여줄래?"}, {"en": "Okay.", "kr": "알겠어."}], "note": "'Sound'는 외관이나 소리로부터 느껴지는 인상이나 느낌을 나타내기도 합니다. 'sounds tasty'라고 하면 음식이 맛있게 들린다, 즉 맛있겠다는 뜻이 됩니다."}, {"id": 46, "expr_en": "You're my life saver.", "expr_kr": "너 진짜 구세주야.", "lines": [{"en": "My phone is dead.", "kr": "핸드폰 배터리가 다 됐어."}, {"en": "Do you have a charger?", "kr": "충전기 있어?"}, {"en": "I forgot it at home.", "kr": "집에 두고 왔어."}, {"en": "Do you need to use mine?", "kr": "내 거 쓸래?"}, {"en": "You're my life saver.", "kr": "너 진짜 구세주야."}], "note": "직역하면 '당신은 생명을 구해주는 사람이에요'라는 뜻입니다. 상대방이 큰 도움을 주어서 매우 감사할 때 사용하는 찬사의 말입니다."}, {"id": 47, "expr_en": "I'm jealous of you.", "expr_kr": "내가 부러워.", "lines": [{"en": "You always seem so calm.", "kr": "항상 편안해 보여."}, {"en": "Thanks. I just try to stay calm.", "kr": "고마워, 그냥 침착하려고 노력해."}, {"en": "I'm jealous of you.", "kr": "내가 부러워."}, {"en": "Why is that?", "kr": "왜?"}], "note": "'Jealous'는 '질투하는'이라는 의미의 형용사로, 'be jealous of'는 상대방의 물건이나 경험을 부러워한다는 의미예요. 일반적으로 질투를 의미하지만 강렬한 열망을 표현할 때도 사용됩니다."}, {"id": 48, "expr_en": "That's rough.", "expr_kr": "힘들겠다.", "lines": [{"en": "I have the flu.", "kr": "나 독감 걸렸어."}, {"en": "Oh no, that's rough. Have you seen a doctor?", "kr": "어머 힘들겠다. 병원 갔어?"}, {"en": "Not yet. Just trying to rest at home.", "kr": "아직 안 갔어, 그냥 집에서 쉬고 있어."}], "note": "'Rough'는 표면이 거친, 어려운, 곤란한 등 다양한 뜻을 가지는데, 여기서는 '곤란한'이라는 의미로 쓰였어요. 누군가 어려운 상황에 처해 있을 때 위로 하고 동정하는 표현으로 사용돼요."}, {"id": 49, "expr_en": "It's worth a try.", "expr_kr": "시도해 볼 가치가 있어.", "lines": [{"en": "I applied for the job.", "kr": "그 직장에 지원했어."}, {"en": "That's brave. It's worth a try.", "kr": "용기 있다. 시도해볼 가치가 있어."}, {"en": "I think so too. Hopefully it works out.", "kr": "나도 그렇게 생각해, 잘되길 바라."}], "note": "'Worth'는 가치가 있다는 의미로, 이 표현은 한번 시도해 볼 가치가 있다는 뜻입니다. 상대방에게 한번 해 보라고 설득·제안할 때 사용할 수 있습니다."}, {"id": 50, "expr_en": "This is a big day.", "expr_kr": "오늘 중요한 날이야.", "lines": [{"en": "This is a big day.", "kr": "오늘 중요한 날이야."}, {"en": "Yeah, are you ready?", "kr": "응, 준비됐어?"}, {"en": "I think so. Just stay calm and focused.", "kr": "그런 것 같아, 그냥 침착하고 집중해."}, {"en": "Thanks, I'll do my best.", "kr": "고마워, 최선을 다할게."}], "note": "영어에서는 정도가 크고 중요하다고 표현할 때 'big'을 사용해요. 몇 달 동안 준비한 프로젝트를 오늘 발표하나요? 그렇다면 'This is a big day'라고 말 해 보세요."}];
+
+const STORAGE_KEY = 'dialog50_review_state_v2';
+const NEW_PER_DAY = 1;
+
+function loadState(){
+  let raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){
+    try{ return JSON.parse(raw); }catch(e){}
+  }
+  // migrate from v1 if present
+  let old = localStorage.getItem('dialog50_review_state_v1');
+  if(old){
+    try{ return JSON.parse(old); }catch(e){}
+  }
+  return { unlockedCount: 0, reviewCounts: {}, studyDates: [] };
+}
+function saveState(s){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+}
+let state = loadState();
+
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function totalReviews(){
+  return Object.values(state.reviewCounts).reduce((a,b)=>a+b,0);
+}
+
+function calcStreak(){
+  if(!state.studyDates.length) return 0;
+  const dates = [...new Set(state.studyDates)].sort();
+  let streak = 1;
+  for(let i=dates.length-1;i>0;i--){
+    const cur = new Date(dates[i]);
+    const prev = new Date(dates[i-1]);
+    const diff = (cur - prev)/(1000*60*60*24);
+    if(diff===1) streak++; else break;
+  }
+  return streak;
+}
+
+function colorForCount(c){
+  if(!c) return null;
+  if(c<=2) return 'var(--pine-20)';
+  if(c<=5) return 'var(--pine-55)';
+  return 'var(--pine-80)';
+}
+
+function renderStrata(containerId, highlightIds){
+  const grid = document.getElementById(containerId);
+  grid.innerHTML = '';
+  DIALOGS.forEach(d=>{
+    const cell = document.createElement('div');
+    const learned = d.id <= state.unlockedCount;
+    const count = state.reviewCounts[d.id] || 0;
+    cell.className = 'cell' + (learned? '' : ' locked');
+    if(learned){
+      const col = colorForCount(count);
+      cell.style.background = col || 'var(--pine-10)';
+      cell.style.borderColor = 'transparent';
+      cell.textContent = d.id;
+    }
+    if(highlightIds && highlightIds.includes(d.id)){
+      cell.classList.add('new-today');
+    }
+    cell.addEventListener('click', ()=>{
+      if(learned){ openListAndExpand(d.id); }
+    });
+    grid.appendChild(cell);
+  });
+}
+
+function getDialog(id){ return DIALOGS.find(d=>d.id===id); }
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderHome(){
+  const dayNumber = Math.min(50, state.unlockedCount) ; // days completed
+  document.getElementById('hero-day').textContent = state.unlockedCount>=50 ? 'DAY 50 · 완주' : 'DAY ' + (state.unlockedCount+1);
+  document.getElementById('hero-streak').textContent = '🔥 ' + calcStreak() + '일 연속';
+  document.getElementById('hero-num').innerHTML = state.unlockedCount + '<small>/50</small>';
+  document.getElementById('hero-bar-fill').style.width = (state.unlockedCount/50*100)+'%';
+  document.getElementById('stat-total-reviews').textContent = totalReviews();
+  document.getElementById('stat-days').textContent = new Set(state.studyDates).size;
+  document.getElementById('stat-remaining').textContent = 50 - state.unlockedCount;
+
+  const remaining = 50 - state.unlockedCount;
+  const ctaBtn = document.getElementById('btn-start-session');
+  const ctaLabel = document.getElementById('cta-label');
+  const ctaSub = document.getElementById('cta-sub');
+
+  if(remaining <= 0){
+    ctaLabel.textContent = '전체 복습 다시하기';
+    ctaSub.textContent = '50개 모두 학습 완료! 기억이 흐려지지 않도록 계속 복습해보세요.';
+  } else if(state.unlockedCount === 0){
+    ctaLabel.textContent = '오늘의 학습 시작';
+    ctaSub.textContent = '첫 표현 1개로 시작해요.';
+  } else {
+    ctaLabel.textContent = '오늘의 학습 시작';
+    ctaSub.textContent = `새 표현 1개 + 지금까지 배운 ${state.unlockedCount}개 전체 복습`;
+  }
+  renderStrata('strata-grid');
+  renderCalendar();
+}
+
+// ---------------- Calendar ----------------
+let calYear, calMonth; // calMonth is 0-indexed
+
+function initCalendar(){
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+}
+
+function renderCalendar(){
+  const studiedSet = new Set(state.studyDates);
+  document.getElementById('cal-month-label').textContent = calYear + '년 ' + (calMonth+1) + '월';
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  const firstWeekday = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const todayStrVal = todayStr();
+
+  for(let i=0;i<firstWeekday;i++){
+    const empty = document.createElement('div');
+    empty.className = 'cal-day empty';
+    grid.appendChild(empty);
+  }
+  for(let day=1; day<=daysInMonth; day++){
+    const dateStr = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(day).padStart(2,'0');
+    const cell = document.createElement('div');
+    cell.className = 'cal-day';
+    if(studiedSet.has(dateStr)) cell.classList.add('studied');
+    if(dateStr === todayStrVal) cell.classList.add('today');
+    if(dateStr > todayStrVal) cell.classList.add('future');
+    cell.textContent = day;
+    grid.appendChild(cell);
+  }
+}
+
+document.getElementById('cal-prev').addEventListener('click', ()=>{
+  calMonth--; if(calMonth<0){ calMonth=11; calYear--; }
+  renderCalendar();
+});
+document.getElementById('cal-next').addEventListener('click', ()=>{
+  calMonth++; if(calMonth>11){ calMonth=0; calYear++; }
+  renderCalendar();
+});
+
+// ---------------- Today accordion ----------------
+let todayIds = [];
+let newIdToday = null;
+let openedSet = new Set();
+
+function buildToday(){
+  const reviewIds = [];
+  for(let i=1;i<=state.unlockedCount;i++) reviewIds.push(i);
+  const remaining = 50 - state.unlockedCount;
+  newIdToday = remaining > 0 ? state.unlockedCount + 1 : null;
+  todayIds = reviewIds.concat(newIdToday ? [newIdToday] : []);
+  openedSet = new Set();
+}
+
+function startToday(){
+  buildToday();
+  if(todayIds.length===0) return;
+  const dayLabel = state.unlockedCount>=50 ? '전체 복습' : 'Day ' + (state.unlockedCount+1);
+  document.getElementById('today-title').textContent = '오늘의 학습 · ' + dayLabel;
+  document.getElementById('today-sub').textContent = newIdToday
+    ? `복습 ${state.unlockedCount}개 + 새 표현 1개(No.${newIdToday}) · 항목을 눌러 확인하세요`
+    : `전체 ${todayIds.length}개 복습 · 항목을 눌러 확인하세요`;
+  renderTodayList();
+  updateFinishBar();
+  showView('view-today');
+}
+
+function renderTodayList(){
+  const container = document.getElementById('today-list');
+  container.innerHTML = '';
+  todayIds.forEach(id=>{
+    const d = getDialog(id);
+    const isNew = id === newIdToday;
+    const currentCount = state.reviewCounts[id] || 0;
+    const nextOccurrence = currentCount + 1;
+
+    const item = document.createElement('div');
+    item.className = 'acc-item';
+    item.dataset.id = id;
+
+    const badgeHtml = isNew
+      ? `<span class="acc-badge fresh">NEW</span>`
+      : `<span class="acc-badge review">${nextOccurrence}회차 복습</span>`;
+
+    item.innerHTML = `
+      <div class="acc-head">
+        <div class="acc-num">${id}</div>
+        <div class="acc-main">
+          <div class="kr">${escapeHtml(d.expr_kr)}</div>
+          <div class="en">${escapeHtml(d.expr_en)}</div>
+        </div>
+        ${badgeHtml}
+        <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="acc-body">
+        ${d.lines.map(l=>`<div class="dline"><div class="en">${escapeHtml(l.en)}</div><div class="kr">${escapeHtml(l.kr)}</div></div>`).join('')}
+        <div class="note-box"><b>Tip.</b> ${escapeHtml(d.note)}</div>
+      </div>
+    `;
+    item.querySelector('.acc-head').addEventListener('click', ()=>{
+      item.classList.toggle('expanded');
+      if(!openedSet.has(id)){
+        openedSet.add(id);
+        item.classList.add('opened');
+        updateFinishBar();
+      }
+    });
+    container.appendChild(item);
+  });
+}
+
+function updateFinishBar(){
+  document.getElementById('finish-sub').textContent = `${openedSet.size} / ${todayIds.length} 확인함`;
+  document.getElementById('finish-label').textContent = state.unlockedCount>=50 && !newIdToday ? '복습 완료' : '오늘 학습 완료';
+}
+
+document.getElementById('btn-finish-today').addEventListener('click', finishToday);
+
+function finishToday(){
+  todayIds.forEach(id=>{
+    state.reviewCounts[id] = (state.reviewCounts[id]||0) + 1;
+  });
+  if(newIdToday){
+    state.unlockedCount += 1;
+  }
+  state.studyDates.push(todayStr());
+  saveState(state);
+
+  const dayNum = state.unlockedCount;
+  document.getElementById('complete-title').textContent = state.unlockedCount>=50 ? '50개 전체 완주! 🎉' : `Day ${dayNum} 완료!`;
+  document.getElementById('complete-sub').textContent = state.unlockedCount>=50
+    ? `축하합니다! 오늘 총 ${todayIds.length}개 표현을 복습했고, 50개 표현을 모두 학습했어요. 이제부터는 전체 복습으로 기억을 다져보세요.`
+    : `오늘 ${newIdToday? 'No.'+newIdToday+' 표현을 새로 배우고 ':''}총 ${todayIds.length}개를 복습했어요. 다음엔 No.${state.unlockedCount+1}이 새로 추가됩니다.`;
+  renderStrata('strata-grid-2', newIdToday ? [newIdToday] : []);
+  showView('view-complete');
+}
+
+// ---------------- List / Browse ----------------
+function renderList(filter){
+  const container = document.getElementById('list-container');
+  const f = (filter||'').trim().toLowerCase();
+  container.innerHTML = '';
+  let any = false;
+  DIALOGS.forEach(d=>{
+    const learned = d.id <= state.unlockedCount;
+    const haystack = (d.expr_en + ' ' + d.expr_kr + ' ' + d.lines.map(l=>l.en+' '+l.kr).join(' ')).toLowerCase();
+    if(f && !haystack.includes(f)) return;
+    any = true;
+    const item = document.createElement('div');
+    item.className = 'acc-item';
+    const count = state.reviewCounts[d.id]||0;
+    item.innerHTML = `
+      <div class="acc-head">
+        <div class="acc-num" style="${learned?'':'background:var(--surface-2);color:var(--ink-faint);'}">${d.id}</div>
+        <div class="acc-main">
+          <div class="kr">${escapeHtml(d.expr_kr)}</div>
+          <div class="en">${escapeHtml(d.expr_en)}</div>
+        </div>
+        <span class="list-item-count">${learned? count+'회' : '🔒'}</span>
+        <svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="acc-body">
+        ${d.lines.map(l=>`<div class="dline"><div class="en">${escapeHtml(l.en)}</div><div class="kr">${escapeHtml(l.kr)}</div></div>`).join('')}
+        <div class="note-box"><b>Tip.</b> ${escapeHtml(d.note)}</div>
+      </div>
+    `;
+    item.querySelector('.acc-head').addEventListener('click', ()=>{
+      item.classList.toggle('expanded');
+    });
+    item.dataset.id = d.id;
+    container.appendChild(item);
+  });
+  if(!any){
+    container.innerHTML = '<div class="empty-note">검색 결과가 없어요.</div>';
+  }
+}
+
+function openListAndExpand(id){
+  showView('view-list');
+  renderList('');
+  setTimeout(()=>{
+    const el = document.querySelector(`#list-container .acc-item[data-id="${id}"]`);
+    if(el){ el.classList.add('expanded'); el.scrollIntoView({block:'center'}); }
+  }, 50);
+}
+
+document.getElementById('list-search').addEventListener('input', (e)=>{
+  renderList(e.target.value);
+});
+
+// ---------------- Navigation ----------------
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('topbar-home').style.display = (id==='view-home') ? 'flex' : 'none';
+  document.getElementById('topbar-sub').style.display = (id==='view-home') ? 'none' : 'flex';
+  if(id==='view-home') renderHome();
+  if(id==='view-list') renderList(document.getElementById('list-search').value);
+}
+
+document.getElementById('btn-start-session').addEventListener('click', startToday);
+document.getElementById('btn-open-list').addEventListener('click', ()=>showView('view-list'));
+document.getElementById('btn-open-list-2').addEventListener('click', ()=>showView('view-list'));
+document.getElementById('btn-back-home').addEventListener('click', ()=>showView('view-home'));
+document.getElementById('btn-back-any').addEventListener('click', ()=>showView('view-home'));
+
+initCalendar();
+renderHome();
+</script>
+</body>
+</html>
