@@ -28,17 +28,22 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const network = fetch(event.request)
-        .then((response) => {
-          if (response && response.status === 200 && event.request.url.startsWith(self.location.origin)) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
-          }
-          return response;
-        })
-        .catch(() => cached);
-      return cached || network;
-    })
+    (async () => {
+      try {
+        const fresh = await fetch(event.request);
+        if (fresh && fresh.status === 200 && event.request.url.startsWith(self.location.origin)) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(event.request, fresh.clone());
+        }
+        return fresh;
+      } catch (err) {
+        const cached = await caches.match(event.request);
+        if (cached) return cached;
+        return new Response('오프라인 상태이고 캐시된 페이지도 없어요.', {
+          status: 503,
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' }
+        });
+      }
+    })()
   );
 });
